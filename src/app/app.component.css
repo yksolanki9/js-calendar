@@ -1,0 +1,17 @@
+.day {
+  margin: 0 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 30px);
+  cursor: pointer;
+}
+
+.highlight {
+  background-color: yellow;
+}
+
+.selected-date {
+  background-color: green;
+}
