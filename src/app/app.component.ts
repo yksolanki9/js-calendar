@@ -15,6 +15,7 @@ export class AppComponent {
 
   selectedDate: number = -1;
 
+
   constructor() {}
 
   //How many days are there in a month?
