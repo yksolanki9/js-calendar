@@ -15,6 +15,9 @@ export class AppComponent {
 
   selectedDate: number = -1;
 
+  calendarToShow: number[] = [];
+
+  currentMonth: number = 0;
 
   constructor() {}
 
@@ -54,6 +57,41 @@ export class AppComponent {
     console.log('MONTH DETAIUls', this.monthDetails);
 
     this.days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+
+    this.currentMonth = dayjs().month();
+    this.createMonthCalendar(this.currentMonth);
+  }
+
+  setCurrentMonth(val: number){
+    this.currentMonth = val;
+    this.createMonthCalendar(val);
+  }
+
+  createMonthCalendar(currentMonth: number) {
+    const daysInCurrentMonth = dayjs().set('month', currentMonth).daysInMonth();
+    const daysInPreviousMonth = dayjs().set('month', currentMonth - 1).daysInMonth();
+
+    const dayOfWeek = dayjs().set('month', currentMonth).startOf('month').day();
+    //0 to 6
+
+    const currentMonthCalendar = Array.from(Array(daysInCurrentMonth).keys()).map((val) => (val + 1));
+
+    //Returns [0..6]
+    const prevArray = Array.from(Array(dayOfWeek).keys());
+
+    //Returns [6..0]
+    prevArray.reverse()
+
+    //Gives last month's calendar
+    const lastMonthCalendar = prevArray.map((val) => daysInPreviousMonth - val);
+
+    //For next month
+    const lenOfNextMonth = 7 - ((currentMonthCalendar.length + lastMonthCalendar.length) % 7);
+
+    const nextMonthCalendar = Array.from(Array(lenOfNextMonth).keys()).map((val) => val + 1);
+
+    this.calendarToShow = [...lastMonthCalendar, ...currentMonthCalendar, ...nextMonthCalendar];
+    console.log('calendarToShow', this.calendarToShow);
   }
 
   dateSelected(date: number) {

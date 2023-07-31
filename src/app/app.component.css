@@ -2,10 +2,21 @@
   margin: 0 8px;
 }
 
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(7, 30px);
+  gap: 10px;
   cursor: pointer;
+}
+
+.grid-header {
+  margin-bottom: 10px;
 }
 
 .highlight {
