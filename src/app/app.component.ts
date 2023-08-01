@@ -42,8 +42,7 @@ export class AppComponent {
 
   createAndShowCalendar() {
     const daysInCurrentMonth = this.currentDate.daysInMonth();
-    const daysInPreviousMonth = this.currentDate.subtract(1, 'month').daysInMonth();
-    const dayOfStartOfMonth = this.currentDate.startOf('month').day();
+    const startOfMonth = this.currentDate.startOf('month');
 
     //Create dayjs[] for days in current month
     const currentMonth = this.currentDate.month();
@@ -53,13 +52,13 @@ export class AppComponent {
     /*
     * Create dayjs[] for days in prev month
     * - First, create an array of size equal to the no. of days of prev month that will be shown
-    * - Then, reverse the array. So [0, 1, .., 6] becomes [6, .., 0]
+    * - Then, get the last day of prev month
     * - With this, we can subtract the days in previous month from each value in this array to get date of prev month
     */
-    const prevArray = Array.from(Array(dayOfStartOfMonth).keys());
-    prevArray.reverse()
-    const prevYear = currentMonth - 1  < 0 ? currentYear - 1 : currentYear;
-    const prevMonthCalendar = prevArray.map((val) => dayjs(new Date(prevYear, currentMonth - 1, daysInPreviousMonth - val)));
+    const prevArray = Array.from(Array(startOfMonth.day()).keys());
+    const endOfPrevMonth = startOfMonth.subtract(1, 'day');
+    const prevMonthCalendar = prevArray.map((val) => dayjs(endOfPrevMonth).subtract(val, 'day'));
+    prevMonthCalendar.reverse();
 
     /*
     * Create dayjs[] for days in next month
@@ -67,8 +66,8 @@ export class AppComponent {
     * - Calculate the next month's calendar using the same procedure
     */
     const lenOfNextMonth = 42 - (currentMonthCalendar.length + prevMonthCalendar.length);
-    const nextYear = currentMonth + 1  > 11 ? currentYear + 1 : currentYear;
-    const nextMonthCalendar = Array.from(Array(lenOfNextMonth).keys()).map((val) => dayjs(new Date(nextYear, currentMonth + 1, val + 1)));
+    const startOfNextMonth = startOfMonth.add(1, 'month');
+    const nextMonthCalendar = Array.from(Array(lenOfNextMonth).keys()).map((val) => startOfNextMonth.add(val, 'day'));
 
     //Combine the arrays to get the calendar that will be shown
     this.calendarToShow = [...prevMonthCalendar, ...currentMonthCalendar, ...nextMonthCalendar];
