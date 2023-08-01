@@ -2,16 +2,21 @@
 <div class="container">
   <div>
     <div class="controls">
-      <button (click)="setCurrentMonth(currentMonth - 1)">Prev</button>
-      <div>{{currentDate.toDate()| date:'LLL y'}}</div>
-      <button (click)="setCurrentMonth(currentMonth + 1)">Next</button>
+      <button (click)="changeMonth('PREV')">Prev</button>
+      <div>{{currentDate.toDate() | date:'LLL y'}}</div>
+      <button (click)="changeMonth('NEXT')">Next</button>
     </div>
     <div class="grid grid-header">
-      <span *ngFor="let day of days">{{day}}</span>
+      <span *ngFor="let day of nameOfDays">{{day}}</span>
     </div>
     <div class="grid">
       <div (click)="dateSelected(day)" *ngFor="let day of calendarToShow">
-        <span class="date" [ngClass]="{'filler-date': day.month() !== currentMonth, 'today': day.isSame(today, 'date'), 'selected-date': day.isSame(selectedDate, 'date')}">{{day.date()}}</span>
+        <span class="date" 
+          [ngClass]="{
+            'filler-date': day.month() !== currentDate.month(), 
+            'today': day.isSame(today, 'date'), 
+            'selected-date': day.isSame(selectedDate, 'date')
+          }">{{day.date()}}</span>
       </div>
     </div>
   </div>
