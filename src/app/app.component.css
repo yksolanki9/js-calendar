@@ -27,14 +27,22 @@
   margin-bottom: 10px;
 }
 
-.highlight {
-  background-color: yellow;
+.today {
+  border-radius: 100%;
+  color: white;
+  background: skyblue;
 }
 
 .selected-date {
-  background-color: green;
+  border-radius: 100%;
+  color: royalblue;
+  background-color: lightgray;
 }
 
 .filler-date {
   color: lightgray;
+}
+
+.date {
+  padding: 2px 7px;
 }

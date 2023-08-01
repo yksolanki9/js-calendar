@@ -10,8 +10,8 @@
       <span *ngFor="let day of days">{{day}}</span>
     </div>
     <div class="grid">
-      <div *ngFor="let day of calendarToShow">
-        <span [ngClass]="{'filler-date': day.month !== 'CURR'}">{{day.date}}</span>
+      <div (click)="dateSelected(day)" *ngFor="let day of calendarToShow">
+        <span class="date" [ngClass]="{'filler-date': day.month() !== currentMonth, 'today': day.isSame(today, 'date'), 'selected-date': day.isSame(selectedDate, 'date')}">{{day.date()}}</span>
       </div>
     </div>
   </div>

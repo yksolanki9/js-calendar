@@ -12,9 +12,9 @@ export class AppComponent {
 
   monthDetails: any[] = [];
 
-  selectedDate: number = -1;
+  selectedDate: Dayjs = dayjs();
 
-  calendarToShow: {date: number, month: string}[] = [];
+  calendarToShow: Dayjs[] = [];
 
   currentMonth: number = 0;
 
@@ -41,42 +41,40 @@ export class AppComponent {
   createMonthCalendar(currentMonth: number) {
     console.log('CURRENT MONTH IS', currentMonth, 'and dayjsmonth is', dayjs().month());
     this.currentDate = dayjs().add(currentMonth - dayjs().month(), 'month');
+    const currentYear = this.currentDate.year();
+
     const daysInCurrentMonth = dayjs().set('month', currentMonth).daysInMonth();
     const daysInPreviousMonth = dayjs().set('month', currentMonth - 1).daysInMonth();
 
     const dayOfWeek = dayjs().set('month', currentMonth).startOf('month').day();
     //0 to 6
 
-    const currentMonthCalendar = Array.from(Array(daysInCurrentMonth).keys()).map((val) => ({
-      date: val + 1,
-      month: 'CURR'
-    }));
+    const currentMonthCalendar = Array.from(Array(daysInCurrentMonth).keys()).map((val) => dayjs(new Date(currentYear, currentMonth, val+1)));
 
     //Returns [0..6]
     const prevArray = Array.from(Array(dayOfWeek).keys());
 
     //Returns [6..0]
     prevArray.reverse()
+    const prevYear = currentMonth - 1  < 0 ? currentYear - 1 : currentYear;
 
     //Gives last month's calendar
-    const lastMonthCalendar = prevArray.map((val) => ({
-      date: daysInPreviousMonth - val,
-      month: 'PREV'
-    }));
+    const lastMonthCalendar = prevArray.map((val) => dayjs(new Date(prevYear, currentMonth - 1, daysInPreviousMonth - val)));
 
     //For next month. Got 42 as google calendar always shows 6 weeks to maintain the same height of calendar
     const lenOfNextMonth = 42 - (currentMonthCalendar.length + lastMonthCalendar.length);
 
-    const nextMonthCalendar = Array.from(Array(lenOfNextMonth).keys()).map((val) => ({
-      date: val + 1,
-      month: 'NEXT'
-    }));
+    const nextYear = currentMonth + 1  > 11 ? currentYear + 1 : currentYear;
+    const nextMonthCalendar = Array.from(Array(lenOfNextMonth).keys()).map((val) => dayjs(new Date(nextYear, currentMonth + 1, val + 1)));
 
     this.calendarToShow = [...lastMonthCalendar, ...currentMonthCalendar, ...nextMonthCalendar];
     console.log('calendarToShow', this.calendarToShow);
   }
 
-  dateSelected(date: number) {
-    this.selectedDate = date;
+  dateSelected(dayjsObj: Dayjs) {
+    if(dayjsObj.month() !== this.currentMonth) {
+      this.setCurrentMonth(dayjsObj.month());
+    }
+    this.selectedDate = dayjsObj;
   }
 }
