@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import * as dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
 
 @Component({
   selector: 'app-root',
@@ -11,55 +12,25 @@ export class AppComponent {
 
   monthDetails: any[] = [];
 
-  today: number = -1;
-
   selectedDate: number = -1;
 
-  calendarToShow: number[] = [];
+  calendarToShow: {date: number, month: string}[] = [];
 
   currentMonth: number = 0;
 
+  currentDate: Dayjs = dayjs();
+
+  today: Dayjs = dayjs();
+
   constructor() {}
 
-  //How many days are there in a month?
-  //Which day it is?
-
-  //42 elements always needed
-  // {
-  //   date: number;
-  //   day: 'MONDAY';
-  // }
   ngOnInit() {
-    const startOfMonth = dayjs().startOf('month');
-    this.today = dayjs().date();
-    console.log('startOFMonth is', startOfMonth);
-    const daysInMonth = dayjs().daysInMonth();
-
-    this.monthDetails = [];
-    let currentDay = startOfMonth.day();
-
-    for (let i = 0; i < daysInMonth; i++) {
-      this.monthDetails.push({
-        date: i + 1,
-        day: currentDay % 7,
-      });
-      currentDay++;
-    }
-
-    const prefixDays = this.monthDetails[0].day;
-    for (let i = 0; i < prefixDays; i++) {
-      this.monthDetails.unshift({
-        day: 0,
-        date: 0,
-      });
-    }
-
-    console.log('MONTH DETAIUls', this.monthDetails);
-
     this.days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
     this.currentMonth = dayjs().month();
     this.createMonthCalendar(this.currentMonth);
+
+    this.today = dayjs();
   }
 
   setCurrentMonth(val: number){
@@ -68,13 +39,18 @@ export class AppComponent {
   }
 
   createMonthCalendar(currentMonth: number) {
+    console.log('CURRENT MONTH IS', currentMonth, 'and dayjsmonth is', dayjs().month());
+    this.currentDate = dayjs().add(currentMonth - dayjs().month(), 'month');
     const daysInCurrentMonth = dayjs().set('month', currentMonth).daysInMonth();
     const daysInPreviousMonth = dayjs().set('month', currentMonth - 1).daysInMonth();
 
     const dayOfWeek = dayjs().set('month', currentMonth).startOf('month').day();
     //0 to 6
 
-    const currentMonthCalendar = Array.from(Array(daysInCurrentMonth).keys()).map((val) => (val + 1));
+    const currentMonthCalendar = Array.from(Array(daysInCurrentMonth).keys()).map((val) => ({
+      date: val + 1,
+      month: 'CURR'
+    }));
 
     //Returns [0..6]
     const prevArray = Array.from(Array(dayOfWeek).keys());
@@ -83,12 +59,18 @@ export class AppComponent {
     prevArray.reverse()
 
     //Gives last month's calendar
-    const lastMonthCalendar = prevArray.map((val) => daysInPreviousMonth - val);
+    const lastMonthCalendar = prevArray.map((val) => ({
+      date: daysInPreviousMonth - val,
+      month: 'PREV'
+    }));
 
-    //For next month
-    const lenOfNextMonth = 7 - ((currentMonthCalendar.length + lastMonthCalendar.length) % 7);
+    //For next month. Got 42 as google calendar always shows 6 weeks to maintain the same height of calendar
+    const lenOfNextMonth = 42 - (currentMonthCalendar.length + lastMonthCalendar.length);
 
-    const nextMonthCalendar = Array.from(Array(lenOfNextMonth).keys()).map((val) => val + 1);
+    const nextMonthCalendar = Array.from(Array(lenOfNextMonth).keys()).map((val) => ({
+      date: val + 1,
+      month: 'NEXT'
+    }));
 
     this.calendarToShow = [...lastMonthCalendar, ...currentMonthCalendar, ...nextMonthCalendar];
     console.log('calendarToShow', this.calendarToShow);

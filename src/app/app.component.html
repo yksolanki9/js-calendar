@@ -1,28 +1,17 @@
-<!-- <div>{{today | date:'LLL, y'}}</div>
-
-<div *ngIf="days?.length">
-  <span *ngFor="let day of days" class="day">{{day}}</span>
-</div>
-
-<div class="grid">
-  <div *ngFor="let day of monthDetails" [ngClass]="{'highlight': today === day.date, 'selected-date': day.date === selectedDate}" (click)="dateSelected(day.date)">
-    {{day.date}}
-  </div>
-</div> -->
-<div>Month is {{currentMonth}}</div>
-<div>
-  <button (click)="setCurrentMonth(currentMonth - 1)">Prev</button>
-  <button (click)="setCurrentMonth(currentMonth + 1)">Next</button>
-</div>
 
 <div class="container">
   <div>
+    <div class="controls">
+      <button (click)="setCurrentMonth(currentMonth - 1)">Prev</button>
+      <div>{{currentDate.toDate()| date:'LLL y'}}</div>
+      <button (click)="setCurrentMonth(currentMonth + 1)">Next</button>
+    </div>
     <div class="grid grid-header">
       <span *ngFor="let day of days">{{day}}</span>
     </div>
     <div class="grid">
       <div *ngFor="let day of calendarToShow">
-        {{day}}
+        <span [ngClass]="{'filler-date': day.month !== 'CURR'}">{{day.date}}</span>
       </div>
     </div>
   </div>

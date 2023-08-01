@@ -8,11 +8,19 @@
   align-items: center;
 }
 
+.controls {
+  display: flex;
+  justify-content: space-around;
+  margin: 24px 4px;
+}
+
+
 .grid {
   display: grid;
   grid-template-columns: repeat(7, 30px);
   gap: 10px;
   cursor: pointer;
+  text-align: center;
 }
 
 .grid-header {
@@ -25,4 +33,8 @@
 
 .selected-date {
   background-color: green;
+}
+
+.filler-date {
+  color: lightgray;
 }
